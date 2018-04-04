@@ -8,6 +8,7 @@ CamundaBPM provides a amazing BPM engine to orchestrate processes from, but ther
 
 Vertx to the rescue!  [Vertx.io](vertx.io) provides a Polyglot library on the JVM.  This lets us create a Spring Boot Camunda BPM application, and as part of that application, we will instantiate Vertx and deploy Vertx "Verticles".
 
+
 # How to Build and Deploy
 
 1. Root of Project and run: `./mvnw clean install`
@@ -48,3 +49,4 @@ Once you see the message: `Primary Javascript Vertx Verticle is Deployed` then y
 # Additional Scenarios to Test:
 
 1. What are benefits of using Vertx vs Deploying Many Camunda instances that have been customized, and all instances point to same Camunda DB.
+1. Add support for using es4x (https://github.com/reactiverse/es4x) so that "node" projects can be used to extend the Camunda BPM API.
