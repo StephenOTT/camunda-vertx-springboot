@@ -1,0 +1,41 @@
+# Reference: https://stage.docs.camunda.org/manual/develop/user-guide/spring-boot-integration/configuration/#camunda-engine-properties
+camunda.bpm:
+  admin-user:
+    id: admin
+    password: admin
+    firstName: admin
+    lastName: admin
+    email: admin
+  history-level: FULL
+  webapp:
+    index-redirect-enabled: true
+  job-execution:
+    deployment-aware: false
+    core-pool-size: 3
+    max-pool-size: 10
+  database:
+    schema-update: true
+    type: h2
+    # table-prefix: 
+    # schema-name:
+  authorization:
+    enabled: false
+    # enabled-for-custom-code: 
+    # authorization-check-revokes: 
+    tenant-check-enabled: true
+
+
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# H2 Web Console (H2ConsoleProperties)
+spring.h2.console.enabled: false # Whether to enable the console.
+spring.h2.console.path: /h2-console # Path at which the console is available.
+spring.h2.console.settings.trace: false # Whether to enable trace output.
+spring.h2.console.settings.web-allow-others: false # Whether to enable remote access.
+
+
+# JERSEY (JerseyProperties)
+spring.jersey.application-path: /rest # Path that serves as the base URI for the application. If specified, overrides the value of "@ApplicationPath".
+# spring.jersey.filter.order=0 # Jersey filter chain order.
+# spring.jersey.init.*= # Init parameters to pass to Jersey through the servlet or filter.
+# spring.jersey.servlet.load-on-startup=-1 # Load on startup priority of the Jersey servlet.
+# spring.jersey.type=servlet # Jersey integration type.
