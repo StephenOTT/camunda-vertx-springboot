@@ -44,7 +44,11 @@ Once you see the message: `Primary Javascript Vertx Verticle is Deployed` then y
 
 ![overview](./docs/Vertx-Camunda-Models.png)
 
+# How to scale this thing
 
+The Camunda SpringBoot will provide the standard camunda clustering capabilities.  This will allow you to deploy multiple instances of the Camunda SpringBoot application that point to a common database service.
+
+Vertx can be clustered and scaled as well with all of the standard Vertx scaling features.  Multiple instances of stand-alone Vertx can be setup once you establish event bus endpoints that speak to Camunda's Java API.  
 
 # Additional Scenarios to Test:
 
