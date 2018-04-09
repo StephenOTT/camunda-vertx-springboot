@@ -13,7 +13,7 @@ Vertx to the rescue!  [Vertx.io](vertx.io) provides a Polyglot library on the JV
 
 1. Root of Project and run: `./mvnw clean install`
 
-1. After build is complete, run: `java -jar /target/camunda-bpm-spring-boot-starter-example-webapp-0.0.1-SNAPSHOT.jar`
+1. After build is complete, run: `java -jar ./target/vertxcamunda-0.1.0-SNAPSHOT.jar`
 
 Follow along in the Console, and you will see Netty boot, followed by CamundaBPM, followed by the Vertx Verticle.
 
@@ -40,6 +40,13 @@ Once you see the message: `Primary Javascript Vertx Verticle is Deployed` then y
   You can extend the use case or add additional verticles by modifying the `myVerticle.js` file in `src/main/resources`
 
 
+# TODO
+
+1. Add Clustering Support
+1. Add NPM project example showing how to build a NPM style project of JS verticles.
+1. Add error handling to Vertx Delegate
+
+
 # How does this all work? I am not quite sure what is going on...
 
 ![overview](./docs/Vertx-Camunda-Models.png)
@@ -54,3 +61,66 @@ Vertx can be clustered and scaled as well with all of the standard Vertx scaling
 
 1. What are benefits of using Vertx vs Deploying Many Camunda instances that have been customized, and all instances point to same Camunda DB.
 1. Add support for using es4x (https://github.com/reactiverse/es4x) so that "node" projects can be used to extend the Camunda BPM API.
+
+
+# Vertx Camunda JavaDelegate
+
+The Vertx delegate is a Camunda JavaDelegate that enables access to the Vertx EventBus.
+
+using the Java Class: `io.digitalstate.vertxcamunda.VertxDelegate` you can then use Field Injection to provide a `address` (String) ad `message` (Currently String is only supported, but will be converted to JSON in future iterations) which will be used to communicate with the Event Bus.
+
+This allows you to create javascript verticles that listen for eventbus actions that are activated by the Camunda Java Delegate.
+
+Consider the following:
+
+The `delegate-verticle.js` verticle is in `src/main/resources`.  This verticle contains the following:
+
+```javascript
+exports.vertxStart = function() {
+  console.log('Camunda Delegate Verticle has Deployed')
+}
+exports.vertxStop = function() {
+  console.log('Camunda Delegate Verticle has UnDeployed')
+}
+
+var eb = vertx.eventBus()
+console.log(eb)
+
+var consumer = eb.consumer("someAction")
+consumer.handler(function (message) {
+  console.log("I have received a message: " + message.body())
+  console.log(message.headers().get('DelegateExecution'))
+  message.reply("how interesting!")
+})
+```
+
+The eventbus is establishing a consumer for the eventbus Address of `someAction`
+
+You can then set your Service Task or any other delegate code as follows:
+
+![config 1](./docs/delegate-config-1.png)
+![config 2](./docs/delegate-config-2.png)
+![config 3](./docs/delegate-config-3.png)
+
+
+# camunda-services.js
+
+The camunda-services.js library is a small set of code that exposes the Camunda engine services as variables.
+
+You can load this in any javascript vertx verticle with `load('classpath:camunda-services')`.  See the [camunda-services.js](./src/main/resources/camunda-services.js) file for which variables are exposed.
+
+# Sample BPMN File
+
+The `sample.bpmn` BPMN file (`src/main/resources`) has been configured with a example of the [VertxDelegate](#vertx-camunda-javadelegate):
+
+![config 1](./docs/delegate-config-1.png)
+
+You can activate this process through the Task list (Default configuration of User: `admin` Password: `admin`).  Start the "Sample" process definition.
+
+The console will print the following
+
+```console
+I have received a message: AWESOME!!!!
+{"isCanceled":false,"activityInstanceId":"Task_042ajsy:9596ecb2-3c26-11e8-b22d-60c547076970","CurrentActivityName":"VertxDelegate","ProcessInstanceId":"9594a2c0-3c26-11e8-b22d-60c547076970","ParentActivityInstanceId":"9594a2c0-3c26-11e8-b22d-60c547076970","ProcessDefinitionId":"Sample:1:7b508b8f-3c26-11e8-b22d-60c547076970","CurrentActivityId":"Task_042ajsy","ExecutionId":"9594a2c0-3c26-11e8-b22d-60c547076970"}
+EventBus SUCCESS: how interesting!
+```

@@ -12,7 +12,7 @@ import io.vertx.core.Vertx;
 @EnableProcessApplication
 public class VertxCamundaApplication {
   
-  final static Vertx vertx = Vertx.vertx();
+  final public static Vertx vertx = Vertx.vertx();
 
   public static void main(String... args) {
     vertx.executeBlocking(future -> {
@@ -32,6 +32,7 @@ public class VertxCamundaApplication {
     // System.out.println(jsonConfig);
     // vertx.deployVerticle(entryJsVerticle, options);
     vertx.deployVerticle("myVerticle.js");
+    vertx.deployVerticle("delegate-verticle.js");
 
   }
 }
