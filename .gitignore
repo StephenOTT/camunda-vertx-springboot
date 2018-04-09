@@ -3,6 +3,7 @@ build/
 target/
 bin/
 .settings
+.sts*
 
 # Ignore VertX file cache
 .vertx/
