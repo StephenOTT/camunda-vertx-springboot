@@ -7,24 +7,11 @@ exports.vertxStop = function() {
   console.log('Primary Javascript Vertx Verticle has UnDeployed')
 }
 
-var myConfig = Vertx.currentContext().config()
-print(myConfig.name)
-
-// Get the Default Process Engine
-// ProcessEngines: https://docs.camunda.org/javadoc/camunda-bpm-platform/7.8/org/camunda/bpm/engine/ProcessEngines.html
-var ProcessEngines = Java.type('org.camunda.bpm.engine.ProcessEngines')
-var processEngine = ProcessEngines.getDefaultProcessEngine()
-
-// Get the Repository Service
-var repositoryService = processEngine.getRepositoryService()
+// @TODO Replace to Require() at some point
+load('classpath:camunda-services.js')
 
 // See the following for other services you can access:
 // Engine Services: https://docs.camunda.org/javadoc/camunda-bpm-platform/7.8/org/camunda/bpm/engine/ProcessEngineServices.html
-
-// Json handling using Camunda Json Util library.  See link for more details:
-// https://docs.camunda.org/javadoc/camunda-bpm-platform/7.8/org/camunda/bpm/engine/impl/util/json/package-tree.html
-var JSONObject = Java.type('org.camunda.bpm.engine.impl.util.json.JSONObject')
-var JSONArray = Java.type('org.camunda.bpm.engine.impl.util.json.JSONArray')
 
 // Setup the Vertx Web Router
 var Router = require("vertx-web-js/router")
