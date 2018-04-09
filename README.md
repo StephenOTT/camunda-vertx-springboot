@@ -98,9 +98,9 @@ The eventbus is establishing a consumer for the eventbus Address of `someAction`
 
 You can then set your Service Task or any other delegate code as follows:
 
-![config 1](./docs/delegate-config-1.png)
-![config 2](./docs/delegate-config-2.png)
-![config 3](./docs/delegate-config-3.png)
+![config 1](./docs/Delegate-Config-1.png)
+![config 2](./docs/Delegate-Config-2.png)
+![config 3](./docs/Delegate-Config-3.png)
 
 
 # camunda-services.js
@@ -113,7 +113,7 @@ You can load this in any javascript vertx verticle with `load('classpath:camunda
 
 The `sample.bpmn` BPMN file (`src/main/resources`) has been configured with a example of the [VertxDelegate](#vertx-camunda-javadelegate):
 
-![config 1](./docs/delegate-config-1.png)
+![config 1](./docs/Delegate-Config-1.png)
 
 You can activate this process through the Task list (Default configuration of User: `admin` Password: `admin`).  Start the "Sample" process definition.
 
