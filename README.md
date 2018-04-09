@@ -107,7 +107,7 @@ You can then set your Service Task or any other delegate code as follows:
 
 The camunda-services.js library is a small set of code that exposes the Camunda engine services as variables.
 
-You can load this in any javascript vertx verticle with `load('classpath:camunda-services')`.  See the [camunda-services.js](./src/main/resources/camunda-services.js) file for which variables are exposed.
+You can load this in any javascript vertx verticle with `load('classpath:camunda-services.js')`.  See the [camunda-services.js](./src/main/resources/camunda-services.js) file for which variables are exposed.
 
 # Sample BPMN File
 
