@@ -124,3 +124,5 @@ I have received a message: AWESOME!!!!
 {"isCanceled":false,"activityInstanceId":"Task_042ajsy:9596ecb2-3c26-11e8-b22d-60c547076970","CurrentActivityName":"VertxDelegate","ProcessInstanceId":"9594a2c0-3c26-11e8-b22d-60c547076970","ParentActivityInstanceId":"9594a2c0-3c26-11e8-b22d-60c547076970","ProcessDefinitionId":"Sample:1:7b508b8f-3c26-11e8-b22d-60c547076970","CurrentActivityId":"Task_042ajsy","ExecutionId":"9594a2c0-3c26-11e8-b22d-60c547076970"}
 EventBus SUCCESS: how interesting!
 ```
+
+![bus response](./docs/Bus-response.png)
