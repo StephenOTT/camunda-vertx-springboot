@@ -4,6 +4,7 @@ import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 // import io.vertx.core.json.JsonObject;
 // import io.vertx.core.DeploymentOptions;
@@ -25,14 +26,8 @@ public class VertxCamundaApplication {
   }
 
   public static void deployVerticle() {
-    // @TODO Add Config file handling - Use Vertx or Spring configs...
-    // JsonObject jsonConfig = vertx.getOrCreateContext().config();
-    // DeploymentOptions options = new DeploymentOptions(jsonConfig);
-    // String entryJsVerticle = jsonConfig.getString("entryJsVerticle");
-    // System.out.println(jsonConfig);
-    // vertx.deployVerticle(entryJsVerticle, options);
-    vertx.deployVerticle("myVerticle.js");
-    vertx.deployVerticle("delegate-verticle.js");
+    vertx.deployVerticle("vertx-yaml-config-verticle.js", new DeploymentOptions().setWorker(true));
+    // vertx.deployVerticle("delegate-verticle.js");
 
   }
 }

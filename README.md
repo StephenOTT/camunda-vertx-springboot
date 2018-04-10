@@ -2,6 +2,7 @@
 
 This is a working example/prototype/use case builder for testing the capabilities of using Vertx.io to extend CamundaBPM (Spring Boot Deployment).
 
+
 ## Why does this exist?
 
 CamundaBPM provides a amazing BPM engine to orchestrate processes from, but there can be "annoyances" when working with Camunda as a "microserice": that is, you use Camunda as a common microservice rather than a "embedded BPM engine in your application".  This means that you would be interacting with Camunda through the Rest API, and as your API usage grows in complexity, there are limits to what the current Rest API offers.  Given that this is a "common microservice" (that may be used 'enterprise wide') we may or may not want to continually extend Camunda's core REST API.  So how do we add API functionality without having to recompile Camunda's Jar, and preferably, how can we add these API functions **without** having to write "Java".
@@ -11,11 +12,13 @@ Vertx to the rescue!  [Vertx.io](vertx.io) provides a Polyglot library on the JV
 
 # How to Build and Deploy
 
+1. Go to src/main/resources and run `npm install lodash`
+
 1. Root of Project and run: `./mvnw clean install`
 
-1. After build is complete, run: `java -jar ./target/vertxcamunda-0.1.0-SNAPSHOT.jar`
+1. After build is complete, run: `YAML_VERTICLE_PATH=/path/to/yaml/file/js_app/verticle-config.yaml java -jar /path/to/jar/vertxcamunda-0.1.0-SNAPSHOT.jar`
 
-Follow along in the Console, and you will see Netty boot, followed by CamundaBPM, followed by the Vertx Verticle.
+Follow along in the Console, you will see Camunda boot followed by the Vertx Verticles.  See the [Verticle Configuration through YAML](#verticle-configuration-through-yaml) section for more details about the `YAML_VERTICLE_PATH` env variable.
 
 Once you see the message: `Primary Javascript Vertx Verticle is Deployed` then you can navigate to: `http://localhost:8081/my-deployments` which should return a result such as:
 
@@ -47,20 +50,22 @@ Once you see the message: `Primary Javascript Vertx Verticle is Deployed` then y
 1. Add error handling to Vertx Delegate
 
 
+## Additional Scenarios to Test:
+
+1. What are benefits of using Vertx vs Deploying Many Camunda instances that have been customized, and all instances point to same Camunda DB.
+1. Add support for using es4x (https://github.com/reactiverse/es4x) so that "node" projects can be used to extend the Camunda BPM API.
+
+
 # How does this all work? I am not quite sure what is going on...
 
 ![overview](./docs/Vertx-Camunda-Models.png)
+
 
 # How to scale this thing
 
 The Camunda SpringBoot will provide the standard camunda clustering capabilities.  This will allow you to deploy multiple instances of the Camunda SpringBoot application that point to a common database service.
 
 Vertx can be clustered and scaled as well with all of the standard Vertx scaling features.  Multiple instances of stand-alone Vertx can be setup once you establish event bus endpoints that speak to Camunda's Java API.  
-
-# Additional Scenarios to Test:
-
-1. What are benefits of using Vertx vs Deploying Many Camunda instances that have been customized, and all instances point to same Camunda DB.
-1. Add support for using es4x (https://github.com/reactiverse/es4x) so that "node" projects can be used to extend the Camunda BPM API.
 
 
 # Vertx Camunda JavaDelegate
@@ -109,6 +114,7 @@ The camunda-services.js library is a small set of code that exposes the Camunda 
 
 You can load this in any javascript vertx verticle with `load('classpath:camunda-services.js')`.  See the [camunda-services.js](./src/main/resources/camunda-services.js) file for which variables are exposed.
 
+
 # Sample BPMN File
 
 The `sample.bpmn` BPMN file (`src/main/resources`) has been configured with a example of the [VertxDelegate](#vertx-camunda-javadelegate):
@@ -126,3 +132,44 @@ EventBus SUCCESS: how interesting!
 ```
 
 ![bus response](./docs/Bus-response.png)
+
+
+# Verticle Configuration through YAML
+
+Included in the Jar is the `vertx-yaml-config-verticle.js`, this verticle manages the processing of the config YAML file.  This config file contains the configuration of verticle
+
+```yaml
+# Verticle Configurations
+verticles:
+    my_delegate_verticle:
+        path: "app/verticles/vert1.js"
+        worker: false
+        instances: 1
+        isolationGroup:
+        isolatedClasses:
+        config:
+            value1: "dog"
+            value2: "cat"
+    processing_verticle_ABC:
+        path: "some/docker/volume/location/verticleABC.js"
+        worker: true
+        instances: 10
+```
+
+the file can be as minimal as:
+
+```yaml
+verticles:
+    my_delegate_verticle:
+        path: "app/verticles/vert1.js"
+```
+
+See Vertx.io documentation for details about Verticle Deployment Options.
+
+On the startup of the `vertx-yaml-config-verticle.js` verticle, it will look for verticles described in the YAML file.  The location of the YAML file is defined by the ENV variable `YAML_VERTICLE_PATH`.  A example YAML file in included in `./js_app` folder as `verticle-config.yaml`.
+
+Verticles that are deployed within the context of the Camunda BPM SpringBoot application will be able to access the Java API of Camunda directly.
+
+Verticles that are deployed on other Vertx Instances that are not part of a Camunda deployment will not be able to access the API directly.  The workaround for this is to build EventBus APIs for various Camunda engine services.
+
+**Note** that Lodash is available on the classpath as part of the vertx-yaml-config-verticle.js verticle.  You can add Lodash to any deployed verticle with a `require('lodash')` in your verticle's JS code.

@@ -1,0 +1,6 @@
+# Verticle Configurations
+verticles:
+    delegate_verticle:
+        path: "/Users/stephenrussett/Documents/GitHub/camunda-vertx/js_app/delegate-verticle.js"
+    my_verticle:
+        path: "/Users/stephenrussett/Documents/GitHub/camunda-vertx/js_app/myVerticle.js"
