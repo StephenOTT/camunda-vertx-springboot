@@ -9,6 +9,16 @@ CamundaBPM provides a amazing BPM engine to orchestrate processes from, but ther
 
 Vertx to the rescue!  [Vertx.io](vertx.io) provides a Polyglot library on the JVM.  This lets us create a Spring Boot Camunda BPM application, and as part of that application, we will instantiate Vertx and deploy Vertx "Verticles".
 
+### Why use SpringBoot? and why not just run Camunda Embedded Jar in Vertx Verticle?
+
+1. SpringBoot Starter for Camunda provides a lot of ease of use capabilities that simplifies the configuration and management of camunda.
+1. Camunda manages its own "workers", threads, and processing of data.  If Vertx was used to setup/deploy a camunda instance, then someone could activate multiple "instances" of the verticle, creating multiple instances of camunda... this does not work so well...
+1. Camunda already manages threads per process instance and sync/async controls.  Vertx's capabilities in this space is not required and only creates the need for further management.
+1. The Camunda SpringBoot starter is officially supported by Camunda, thus issues and configurations options are less likely to be a problem compared to a homegrown vertx setup.
+1. Camunda has many other options for Database control, Rest API control, authorizations and authentication, etc.  SpringBoot already provides the easy to use hooks and connections for this. If these benefits were ignored, we would be back at setting it up manually within a vertx instance.
+1. Camunda has worker pool and thread size configurations that make Vertx Instance count configurations a redundant option.
+
+Overall the general view is: Camunda should be treated as a application, even when it is being embedded.  Vertx is embedded within the SpringBoot application, providing easy polyglot access to Camunda's Java API, and allowing Camunda to communicate with Vertx through the Vertx eventbus.
 
 # How to Build and Deploy
 
